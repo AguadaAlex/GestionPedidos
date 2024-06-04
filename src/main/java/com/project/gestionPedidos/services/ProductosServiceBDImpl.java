@@ -35,7 +35,7 @@ public class ProductosServiceBDImpl implements ProductoService{
     @Override
     public void saveProducto(Producto producto) {
         ProductoEntity productoEntity=new ProductoEntity();
-        productoEntity.setProductoId(producto.getProductoId());
+        System.out.println(producto);
         productoEntity.setNombreProducto(producto.getNombreProducto());
         productoEntity.setPrecioProducto(producto.getPrecioProducto());
         productoEntity.setDescripcionProducto(producto.getDescripcionProducto());
