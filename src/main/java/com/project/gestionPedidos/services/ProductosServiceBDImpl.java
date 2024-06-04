@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +51,7 @@ public class ProductosServiceBDImpl implements ProductoService{
     @Override
     public Producto getProductoById(Long ProductoId) {
         Optional<ProductoEntity> optionalProducto = productosRepository.findById(ProductoId);
-        Producto producto = new Producto();
+        Producto producto=new Producto();
         producto.setProductoId(optionalProducto.get().getProductoId());
         producto.setNombreProducto(optionalProducto.get().getNombreProducto());
         producto.setPrecioProducto(optionalProducto.get().getPrecioProducto());
@@ -58,5 +59,29 @@ public class ProductosServiceBDImpl implements ProductoService{
         producto.setStock(optionalProducto.get().getStock());
         producto.setCategoriaId(optionalProducto.get().getCategoriaId());
         return producto;
+    }
+
+    @Override
+    public Producto updateProducto(Producto producto) {
+        ProductoEntity existeProducto=productosRepository.findById(producto.getProductoId()).get();
+        ProductoEntity entidadSeteada=setEntidadProducto(existeProducto,producto);
+        productosRepository.save(entidadSeteada);
+        return producto;
+    }
+
+    @Override
+    public void deleteProducto(Long ProductoId) {
+        productosRepository.deleteById(ProductoId);
+    }
+
+    public ProductoEntity setEntidadProducto( ProductoEntity existeProducto,Producto producto){
+        ProductoEntity productoEntity = new ProductoEntity();
+        productoEntity.setProductoId(producto.getProductoId());
+        productoEntity.setNombreProducto(producto.getNombreProducto());
+        productoEntity.setPrecioProducto(producto.getPrecioProducto());
+        productoEntity.setDescripcionProducto(producto.getDescripcionProducto());
+        productoEntity.setStock(producto.getStock());
+        productoEntity.setCategoriaId(producto.getCategoriaId());
+        return productoEntity;
     }
 }

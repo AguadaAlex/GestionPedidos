@@ -36,4 +36,17 @@ public class ProductosControllerRest {
                 .toUri();
         return ResponseEntity.created(location).body(producto);
     }
+    @PutMapping("{id}")
+    public ResponseEntity<?> updateProducto(@PathVariable("id") Long productoId,@RequestBody Producto producto){
+        producto.setProductoId(productoId);
+        Producto updateProducto=productosServiceBD.updateProducto(producto);
+        return new ResponseEntity<>(updateProducto, HttpStatus.OK);
+
+    }
+    @DeleteMapping  ("{id}")
+    public ResponseEntity<?> updateProducto(@PathVariable("id") Long productoId){
+        productosServiceBD.deleteProducto(productoId);
+        return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
+
+    }
 }
