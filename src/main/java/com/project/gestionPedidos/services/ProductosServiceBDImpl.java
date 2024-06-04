@@ -1,6 +1,7 @@
 package com.project.gestionPedidos.services;
 
 import com.project.gestionPedidos.domain.Producto;
+import com.project.gestionPedidos.mapper.AutoProductoMapper;
 import com.project.gestionPedidos.mapper.ProductoMapper;
 import com.project.gestionPedidos.persistance.entities.ProductoEntity;
 import com.project.gestionPedidos.persistance.repositories.ProductosRepository;
@@ -23,7 +24,8 @@ public class ProductosServiceBDImpl implements ProductoService{
         List<ProductoEntity> productoEntities=productosRepository.findAll();
         List<Producto> productos=new ArrayList<>();
         for (ProductoEntity productoEntity : productoEntities){
-            productos.add(ProductoMapper.MapToProductoDomain(productoEntity));
+            //productos.add(ProductoMapper.MapToProductoDomain(productoEntity));
+            productos.add(AutoProductoMapper.MAPPER.MapToProductoDomain(productoEntity));
         }
 
         return productos;
@@ -32,14 +34,16 @@ public class ProductosServiceBDImpl implements ProductoService{
     @Override
     public void saveProducto(Producto producto) {
         System.out.println(producto);
-        productosRepository.save(ProductoMapper.MapToProductoEntity(producto));
+        //productosRepository.save(ProductoMapper.MapToProductoEntity(producto));
+        productosRepository.save(AutoProductoMapper.MAPPER.MapToProductoEntity(producto));
 
     }
 
     @Override
     public Producto getProductoById(Long ProductoId) {
         Optional<ProductoEntity> optionalProducto = productosRepository.findById(ProductoId);
-        return ProductoMapper.MapToProductoDomain(optionalProducto.get());
+        //return ProductoMapper.MapToProductoDomain(optionalProducto.get());
+        return AutoProductoMapper.MAPPER.MapToProductoDomain(optionalProducto.get());
     }
 
     @Override
@@ -51,7 +55,8 @@ public class ProductosServiceBDImpl implements ProductoService{
         existeProducto.setStock(producto.getStock());
         existeProducto.setCategoriaId(producto.getCategoriaId());
         ProductoEntity updateProductoEntity=productosRepository.save(existeProducto);
-        return ProductoMapper.MapToProductoDomain(updateProductoEntity);
+        //return ProductoMapper.MapToProductoDomain(updateProductoEntity);
+        return AutoProductoMapper.MAPPER.MapToProductoDomain(updateProductoEntity);
     }
 
     @Override
