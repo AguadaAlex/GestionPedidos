@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service("BD")
 @ConditionalOnProperty(value = "productos.estrategia",havingValue = "EN_BD")
 public class ProductosServiceBDImpl implements ProductoService{
@@ -43,5 +45,18 @@ public class ProductosServiceBDImpl implements ProductoService{
         productoEntity.setCategoriaId(producto.getCategoriaId());
         productosRepository.save(productoEntity);
 
+    }
+
+    @Override
+    public Producto getProductoById(Long ProductoId) {
+        Optional<ProductoEntity> optionalProducto = productosRepository.findById(ProductoId);
+        Producto producto = new Producto();
+        producto.setProductoId(optionalProducto.get().getProductoId());
+        producto.setNombreProducto(optionalProducto.get().getNombreProducto());
+        producto.setPrecioProducto(optionalProducto.get().getPrecioProducto());
+        producto.setDescripcionProducto(optionalProducto.get().getDescripcionProducto());
+        producto.setStock(optionalProducto.get().getStock());
+        producto.setCategoriaId(optionalProducto.get().getCategoriaId());
+        return producto;
     }
 }

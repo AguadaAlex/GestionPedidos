@@ -9,7 +9,7 @@ public class ProductoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ProductoId")
-    private Integer ProductoId;
+    private Long ProductoId;
     @Column(name = "NombreProducto")
     private String NombreProducto;
     @Column(name = "PrecioProducto")
