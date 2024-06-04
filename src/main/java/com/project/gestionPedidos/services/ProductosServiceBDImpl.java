@@ -1,6 +1,7 @@
 package com.project.gestionPedidos.services;
 
 import com.project.gestionPedidos.domain.Producto;
+import com.project.gestionPedidos.mapper.ProductoMapper;
 import com.project.gestionPedidos.persistance.entities.ProductoEntity;
 import com.project.gestionPedidos.persistance.repositories.ProductosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,7 @@ public class ProductosServiceBDImpl implements ProductoService{
         List<ProductoEntity> productoEntities=productosRepository.findAll();
         List<Producto> productos=new ArrayList<>();
         for (ProductoEntity productoEntity : productoEntities){
-            Producto producto = new Producto();
-            producto.setProductoId(productoEntity.getProductoId());
-            producto.setNombreProducto(productoEntity.getNombreProducto());
-            producto.setPrecioProducto(productoEntity.getPrecioProducto());
-            producto.setDescripcionProducto(productoEntity.getDescripcionProducto());
-            producto.setStock(productoEntity.getStock());
-            producto.setCategoriaId(productoEntity.getCategoriaId());
-            productos.add(producto);
+            productos.add(ProductoMapper.MapToProductoDomain(productoEntity));
         }
 
         return productos;
@@ -37,36 +31,27 @@ public class ProductosServiceBDImpl implements ProductoService{
 
     @Override
     public void saveProducto(Producto producto) {
-        ProductoEntity productoEntity=new ProductoEntity();
         System.out.println(producto);
-        productoEntity.setNombreProducto(producto.getNombreProducto());
-        productoEntity.setPrecioProducto(producto.getPrecioProducto());
-        productoEntity.setDescripcionProducto(producto.getDescripcionProducto());
-        productoEntity.setStock(producto.getStock());
-        productoEntity.setCategoriaId(producto.getCategoriaId());
-        productosRepository.save(productoEntity);
+        productosRepository.save(ProductoMapper.MapToProductoEntity(producto));
 
     }
 
     @Override
     public Producto getProductoById(Long ProductoId) {
         Optional<ProductoEntity> optionalProducto = productosRepository.findById(ProductoId);
-        Producto producto=new Producto();
-        producto.setProductoId(optionalProducto.get().getProductoId());
-        producto.setNombreProducto(optionalProducto.get().getNombreProducto());
-        producto.setPrecioProducto(optionalProducto.get().getPrecioProducto());
-        producto.setDescripcionProducto(optionalProducto.get().getDescripcionProducto());
-        producto.setStock(optionalProducto.get().getStock());
-        producto.setCategoriaId(optionalProducto.get().getCategoriaId());
-        return producto;
+        return ProductoMapper.MapToProductoDomain(optionalProducto.get());
     }
 
     @Override
     public Producto updateProducto(Producto producto) {
         ProductoEntity existeProducto=productosRepository.findById(producto.getProductoId()).get();
-        ProductoEntity entidadSeteada=setEntidadProducto(existeProducto,producto);
-        productosRepository.save(entidadSeteada);
-        return producto;
+        existeProducto.setNombreProducto(producto.getNombreProducto());
+        existeProducto.setPrecioProducto(producto.getPrecioProducto());
+        existeProducto.setDescripcionProducto(producto.getDescripcionProducto());
+        existeProducto.setStock(producto.getStock());
+        existeProducto.setCategoriaId(producto.getCategoriaId());
+        ProductoEntity updateProductoEntity=productosRepository.save(existeProducto);
+        return ProductoMapper.MapToProductoDomain(updateProductoEntity);
     }
 
     @Override
@@ -74,14 +59,4 @@ public class ProductosServiceBDImpl implements ProductoService{
         productosRepository.deleteById(ProductoId);
     }
 
-    public ProductoEntity setEntidadProducto( ProductoEntity existeProducto,Producto producto){
-        ProductoEntity productoEntity = new ProductoEntity();
-        productoEntity.setProductoId(producto.getProductoId());
-        productoEntity.setNombreProducto(producto.getNombreProducto());
-        productoEntity.setPrecioProducto(producto.getPrecioProducto());
-        productoEntity.setDescripcionProducto(producto.getDescripcionProducto());
-        productoEntity.setStock(producto.getStock());
-        productoEntity.setCategoriaId(producto.getCategoriaId());
-        return productoEntity;
-    }
 }

@@ -1,10 +1,14 @@
 package com.project.gestionPedidos.persistance.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity(name="producto")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
