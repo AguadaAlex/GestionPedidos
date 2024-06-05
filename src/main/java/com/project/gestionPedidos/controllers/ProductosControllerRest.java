@@ -1,17 +1,24 @@
 package com.project.gestionPedidos.controllers;
 
 import com.project.gestionPedidos.domain.Producto;
+import com.project.gestionPedidos.exception.ErrorDetails;
+import com.project.gestionPedidos.exception.ResourceNotFoundException;
 import com.project.gestionPedidos.services.ProductosServiceBDImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/productos")
 public class ProductosControllerRest {
     @Autowired
@@ -49,4 +56,5 @@ public class ProductosControllerRest {
         return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
 
     }
+
 }

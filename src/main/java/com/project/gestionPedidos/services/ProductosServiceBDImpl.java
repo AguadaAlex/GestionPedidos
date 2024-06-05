@@ -1,6 +1,8 @@
 package com.project.gestionPedidos.services;
 
 import com.project.gestionPedidos.domain.Producto;
+import com.project.gestionPedidos.exception.ProductoAlreadyExistsException;
+import com.project.gestionPedidos.exception.ResourceNotFoundException;
 import com.project.gestionPedidos.mapper.AutoProductoMapper;
 import com.project.gestionPedidos.mapper.ProductoMapper;
 import com.project.gestionPedidos.persistance.entities.ProductoEntity;
@@ -34,6 +36,11 @@ public class ProductosServiceBDImpl implements ProductoService{
     @Override
     public void saveProducto(Producto producto) {
         System.out.println(producto);
+        Optional<ProductoEntity> optionalProductoEntity = productosRepository.findByNombreProducto(producto.getNombreProducto());
+        if (optionalProductoEntity.isPresent()){
+            throw new ProductoAlreadyExistsException("EL PRODUCTO YA EXISTE");
+        }
+
         //productosRepository.save(ProductoMapper.MapToProductoEntity(producto));
         productosRepository.save(AutoProductoMapper.MAPPER.MapToProductoEntity(producto));
 
@@ -41,14 +48,17 @@ public class ProductosServiceBDImpl implements ProductoService{
 
     @Override
     public Producto getProductoById(Long ProductoId) {
-        Optional<ProductoEntity> optionalProducto = productosRepository.findById(ProductoId);
+        ProductoEntity productoEntity = productosRepository.findById(ProductoId).orElseThrow(
+                ()-> new ResourceNotFoundException("ProductoEntity","id",ProductoId));
         //return ProductoMapper.MapToProductoDomain(optionalProducto.get());
-        return AutoProductoMapper.MAPPER.MapToProductoDomain(optionalProducto.get());
+        return AutoProductoMapper.MAPPER.MapToProductoDomain(productoEntity);
     }
 
     @Override
     public Producto updateProducto(Producto producto) {
-        ProductoEntity existeProducto=productosRepository.findById(producto.getProductoId()).get();
+        ProductoEntity existeProducto=productosRepository.findById(producto.getProductoId()).orElseThrow(
+                ()->new ResourceNotFoundException("ProductoEntity","id",producto.getProductoId())
+        );
         existeProducto.setNombreProducto(producto.getNombreProducto());
         existeProducto.setPrecioProducto(producto.getPrecioProducto());
         existeProducto.setDescripcionProducto(producto.getDescripcionProducto());
@@ -61,6 +71,9 @@ public class ProductosServiceBDImpl implements ProductoService{
 
     @Override
     public void deleteProducto(Long ProductoId) {
+        ProductoEntity existeProducto=productosRepository.findById(ProductoId).orElseThrow(
+                ()->new ResourceNotFoundException("ProductoEntity","id",ProductoId)
+        );
         productosRepository.deleteById(ProductoId);
     }
 

@@ -15,7 +15,7 @@ public class ProductoEntity {
     @Column(name = "ProductoId")
     private Long ProductoId;
     @Column(name = "NombreProducto")
-    private String NombreProducto;
+    private String nombreProducto;
     @Column(name = "PrecioProducto")
     private Double PrecioProducto;
     @Column(name = "DescripcionProducto")
